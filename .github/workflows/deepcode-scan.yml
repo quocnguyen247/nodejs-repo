@@ -4,7 +4,7 @@ on:
   push:
     branches: [ main, master ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ main, master, ai-review-test ]
   schedule:
     - cron: '0 3 * * 0' # Run weekly on Sundays at 3 AM
 
@@ -18,15 +18,12 @@ jobs:
         with:
           fetch-depth: 0
       
-      - name: DeepCode Scan
-        uses: deep-code-ai/actions@v1
+      - name: Perform DeepCode analysis
+        uses: georgismitev/deepcode-code-scanning-analysis@master
+        env:
+          DEEPCODE_TOKEN: ${{ secrets.DEEPCODE_TOKEN }}
+
+      - name: Upload report
+        uses: github/codeql-action/upload-sarif@v1
         with:
-          api-key: ${{ secrets.DEEPCODE_API_KEY }}
-          severity-threshold: medium
-          report-format: sarif
-          output-file: deepcode-results.sarif
-      
-      - name: Upload SARIF file
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: deepcode-results.sarif
+          sarif_file: output.sarif
