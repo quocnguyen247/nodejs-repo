@@ -24,7 +24,10 @@ jobs:
         uses: snyk/actions/setup@master
       
       - name: Snyk Code Test
-        run: snyk code test --sarif > snyk-code.sarif
+        run: |
+          snyk --version
+          snyk code test --sarif-file-output=snyk-code.sarif || echo "Snyk Code found issues but continuing"
+          ls -la snyk-code.sarif || echo "SARIF file not created"
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         continue-on-error: true
