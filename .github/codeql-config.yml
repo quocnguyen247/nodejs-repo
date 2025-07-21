@@ -1,0 +1,19 @@
+name: "Custom CodeQL Configuration"
+
+queries:
+  - uses: security-and-quality
+  - uses: security-extended
+
+paths:
+  - src
+  - app.js
+  - index.js
+paths-ignore:
+  - node_modules
+  - '**/*.test.js'
+  - '**/*.spec.js'
+  - '**/dist/**'
+
+query-filters:
+  - exclude:
+      id: js/unused-local-variable
