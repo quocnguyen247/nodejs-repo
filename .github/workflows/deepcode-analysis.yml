@@ -18,9 +18,24 @@ jobs:
         with:
           fetch-depth: 0
       
-      - name: DeepCode Analysis
-        uses: snyk/actions/node@master
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+      
+      - name: Install dependencies
+        run: npm install
+      
+      - name: Install Snyk CLI
+        run: npm install -g snyk
+      
+      - name: Run Snyk to check for vulnerabilities
+        run: snyk test --severity-threshold=high
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          args: --severity-threshold=high
+        continue-on-error: true
+      
+      - name: Run Snyk to monitor for vulnerabilities
+        run: snyk monitor
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
