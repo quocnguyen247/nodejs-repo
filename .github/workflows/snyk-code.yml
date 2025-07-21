@@ -1,16 +1,16 @@
-name: DeepCode Analysis
+name: Snyk Code Analysis
 
 on:
   push:
     branches: [ main, master ]
   pull_request:
-    branches: [ main, master, ai-review-test ]
+    branches: [ main, master ]
   schedule:
     - cron: '0 12 * * 1' # Run weekly on Mondays
 
 jobs:
-  deepcode-scan:
-    name: DeepCode Scan
+  snyk-code:
+    name: Snyk Code Analysis
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -18,20 +18,11 @@ jobs:
         with:
           fetch-depth: 0
       
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
-      
-      - name: Install dependencies
-        run: npm install
-      
-      - name: Run Snyk Code Analysis
-        uses: snyk/actions/node@master
+      - name: Run Snyk Code Test
+        uses: snyk/actions/code@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          command: code test
           args: --severity-threshold=high --sarif-file-output=snyk-code.sarif
       
       - name: Upload SARIF file

@@ -18,6 +18,8 @@ jobs:
         with:
           fetch-depth: 0
       
+      - name: Set up Snyk CLI
+        uses: snyk/actions/setup@master
       - name: Snyk Code Scan
         uses: snyk/actions/code@master
         env:
