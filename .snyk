@@ -1,0 +1,12 @@
+# Snyk (https://snyk.io) policy file
+version: v1.25.0
+
+# ignores vulnerabilities until expiry date; change duration by modifying expiry date
+ignore:
+  'npm:express:*':
+    - '* > express':
+        reason: 'Example ignore rule for demonstration'
+        expires: 2023-12-31T00:00:00.000Z
+
+# patches apply the minimum changes required to fix a vulnerability
+patch: {}

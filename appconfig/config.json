@@ -1,0 +1,20 @@
+{
+  "features": {
+    "newFeature": true,
+    "betaFeature": false,
+    "darkMode": true
+  },
+  "settings": {
+    "timeout": 3000,
+    "maxRetries": 3,
+    "cacheTime": 300,
+    "allowedIPs": [
+      "192.168.1.1/24",
+      "10.0.0.1/16"
+    ]
+  },
+  "endpoints": {
+    "api": "https://api.example.com/v1",
+    "auth": "https://auth.example.com/v2"
+  }
+}

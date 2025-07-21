@@ -1,0 +1,30 @@
+name: Snyk Curl Install
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master, ai-review-test ]
+
+jobs:
+  snyk-scan:
+    name: Snyk Code Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      
+      - name: Install Snyk CLI with curl
+        run: |
+          curl -Lo ./snyk https://github.com/snyk/snyk/releases/download/v1.1130.0/snyk-linux
+          chmod +x ./snyk
+          sudo mv ./snyk /usr/local/bin/
+      
+      - name: Verify Snyk installation
+        run: snyk --version
+      
+      - name: Run Snyk Code scan
+        run: snyk code test
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        continue-on-error: true

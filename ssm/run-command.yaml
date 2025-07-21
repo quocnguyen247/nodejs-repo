@@ -1,0 +1,43 @@
+schemaVersion: "2.2"
+description: "Run health check and collect system information"
+parameters:
+  logLevel:
+    type: "String"
+    description: "Log level for the script"
+    default: "info"
+    allowedValues:
+      - "debug"
+      - "info"
+      - "warn"
+      - "error"
+  outputPath:
+    type: "String"
+    description: "Path to save the output"
+    default: "/tmp/system-info"
+mainSteps:
+  - action: "aws:runShellScript"
+    name: "collectSystemInfo"
+    inputs:
+      runCommand:
+        - "#!/bin/bash"
+        - "set -e"
+        - "LOG_LEVEL={{logLevel}}"
+        - "OUTPUT_PATH={{outputPath}}"
+        - "echo \"Running system health check with log level: $LOG_LEVEL\""
+        - "mkdir -p $OUTPUT_PATH"
+        - "echo \"System Information Report\" > $OUTPUT_PATH/report.txt"
+        - "echo \"Generated on $(date)\" >> $OUTPUT_PATH/report.txt"
+        - "echo \"\nSystem Information:\" >> $OUTPUT_PATH/report.txt"
+        - "uname -a >> $OUTPUT_PATH/report.txt"
+        - "echo \"\nCPU Information:\" >> $OUTPUT_PATH/report.txt"
+        - "cat /proc/cpuinfo | grep 'model name' | head -1 >> $OUTPUT_PATH/report.txt"
+        - "echo \"\nMemory Information:\" >> $OUTPUT_PATH/report.txt"
+        - "free -h >> $OUTPUT_PATH/report.txt"
+        - "echo \"\nDisk Usage:\" >> $OUTPUT_PATH/report.txt"
+        - "df -h >> $OUTPUT_PATH/report.txt"
+        - "echo \"\nRunning Processes:\" >> $OUTPUT_PATH/report.txt"
+        - "ps aux | head -10 >> $OUTPUT_PATH/report.txt"
+        - "echo \"\nNetwork Information:\" >> $OUTPUT_PATH/report.txt"
+        - "ip addr show | grep inet >> $OUTPUT_PATH/report.txt"
+        - "echo \"\nSystem Health Check Complete\""
+        - "echo \"Report saved to $OUTPUT_PATH/report.txt\""

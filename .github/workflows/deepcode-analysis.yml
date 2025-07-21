@@ -1,0 +1,37 @@
+name: DeepCode Analysis
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master, ai-review-test ]
+  schedule:
+    - cron: '0 12 * * 1' # Run weekly on Mondays
+
+jobs:
+  deepcode-scan:
+    name: DeepCode Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      
+      - name: Setup Snyk
+        uses: snyk/actions/setup@master
+      
+      - name: Run Snyk Code Analysis
+        run: |
+          snyk --version
+          snyk code test --severity-threshold=high --sarif-file-output=snyk-code.sarif || echo "Snyk Code found issues but continuing"
+          ls -la snyk-code.sarif || echo "SARIF file not created"
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        continue-on-error: true
+      
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: snyk-code.sarif
+        if: always()

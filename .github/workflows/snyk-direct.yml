@@ -1,0 +1,37 @@
+name: Snyk Direct Analysis
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master, ai-review-test ]
+
+jobs:
+  snyk-scan:
+    name: Snyk Direct Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      
+      - name: Run Snyk directly
+        uses: snyk/actions/setup@master
+      
+      - name: Snyk version
+        run: snyk --version
+      
+      - name: Snyk auth and scan
+        run: |
+          snyk auth ${{ secrets.SNYK_TOKEN }}
+          snyk code test --json > snyk-results.json || echo "Issues found but continuing"
+        continue-on-error: true
+      
+      - name: Display results summary
+        run: |
+          echo "Scan completed. Results saved to snyk-results.json"
+          if [ -f snyk-results.json ]; then
+            echo "Results file exists"
+            cat snyk-results.json | grep -o '"vulnerabilities":\[[^]]*\]' || echo "No vulnerabilities section found"
+          else
+            echo "Results file not created"
+          fi

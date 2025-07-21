@@ -1,0 +1,91 @@
+{
+  "Comment": "Order Processing Workflow",
+  "StartAt": "ValidateOrder",
+  "States": {
+    "ValidateOrder": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:123456789012:function:validate-order",
+      "Next": "CheckInventory",
+      "Catch": [
+        {
+          "ErrorEquals": ["ValidationError"],
+          "Next": "OrderFailed"
+        }
+      ]
+    },
+    "CheckInventory": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:123456789012:function:check-inventory",
+      "Next": "InventoryChoice",
+      "Retry": [
+        {
+          "ErrorEquals": ["ServiceUnavailable"],
+          "IntervalSeconds": 2,
+          "MaxAttempts": 3,
+          "BackoffRate": 1.5
+        }
+      ]
+    },
+    "InventoryChoice": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.inventoryAvailable",
+          "BooleanEquals": true,
+          "Next": "ProcessPayment"
+        }
+      ],
+      "Default": "NotifyOutOfStock"
+    },
+    "NotifyOutOfStock": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:123456789012:function:notify-out-of-stock",
+      "Next": "OrderFailed"
+    },
+    "ProcessPayment": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:123456789012:function:process-payment",
+      "Next": "PaymentChoice",
+      "Catch": [
+        {
+          "ErrorEquals": ["PaymentError"],
+          "Next": "RefundPayment"
+        }
+      ]
+    },
+    "PaymentChoice": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.paymentProcessed",
+          "BooleanEquals": true,
+          "Next": "FulfillOrder"
+        }
+      ],
+      "Default": "OrderFailed"
+    },
+    "FulfillOrder": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:123456789012:function:fulfill-order",
+      "Next": "NotifyCustomer"
+    },
+    "NotifyCustomer": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:123456789012:function:notify-customer",
+      "Next": "OrderSucceeded"
+    },
+    "RefundPayment": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:123456789012:function:refund-payment",
+      "Next": "OrderFailed"
+    },
+    "OrderSucceeded": {
+      "Type": "Succeed"
+    },
+    "OrderFailed": {
+      "Type": "Fail",
+      "Error": "OrderProcessingFailed",
+      "Cause": "Order processing encountered an error"
+    }
+  }
+}
