@@ -22,7 +22,7 @@ jobs:
         uses: snyk/actions/setup@master
       
       - name: Snyk Code Scan
-        run: snyk code test --severity-threshold=medium --sarif-file-output=snyk-results.sarif
+        run: snyk code test --severity-threshold=medium --sarif-file-output=snyk-results.sarif --include-ignores
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       
