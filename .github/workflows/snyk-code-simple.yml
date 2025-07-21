@@ -1,32 +1,28 @@
-name: DeepCode Analysis
+name: Snyk Code Simple
 
 on:
   push:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master, ai-review-test ]
-  schedule:
-    - cron: '0 12 * * 1' # Run weekly on Mondays
 
 jobs:
-  deepcode-scan:
-    name: DeepCode Scan
+  snyk-code:
+    name: Snyk Code Analysis
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
       
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '16'
       
-      - name: Install dependencies
-        run: npm install
+      - name: Install Snyk CLI
+        run: npm install -g snyk
       
-      - name: Run Snyk Code Analysis
+      - name: Run Snyk Code Test
         run: snyk code test --severity-threshold=high --sarif > snyk-code.sarif
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
