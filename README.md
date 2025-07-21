@@ -1,5 +1,8 @@
 # AWS Services Examples
 
+[![DeepCode](https://www.deepcode.ai/api/gh/badge?key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwbGF0Zm9ybTEiOiJnaCIsIm93bmVyMSI6IllPVVJfR0lUSFVCX1VTRVJOQU1FIiwicmVwbzEiOiJub2RlanMtcmVwbyIsImluY2x1ZGVMaW50IjpmYWxzZSwiYXV0aG9ySWQiOiIyODQzNiIsImlhdCI6MTY1MzA1NjI3OX0.RpE3zUyk7WwpCyRQtO5V5cTyeYQI9IXpcT3PzBPZJJE)](https://www.deepcode.ai)
+[![Known Vulnerabilities](https://snyk.io/test/github/YOUR_GITHUB_USERNAME/nodejs-repo/badge.svg)](https://snyk.io/test/github/YOUR_GITHUB_USERNAME/nodejs-repo)
+
 This repository contains examples and configurations for various AWS services.
 
 ## CloudFormation
