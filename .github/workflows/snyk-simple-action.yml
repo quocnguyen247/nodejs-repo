@@ -1,4 +1,4 @@
-name: Snyk GitHub Action
+name: Snyk Security
 
 on:
   push:
@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
-      - name: Run Snyk to check for vulnerabilities
-        uses: snyk/actions/scan@master
+      - name: Run Snyk Code scan
+        uses: snyk/actions/code@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
