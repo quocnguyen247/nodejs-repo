@@ -1,0 +1,32 @@
+name: Snyk NPM Global
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  snyk-scan:
+    name: Snyk Code Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+      
+      - name: Install Snyk CLI globally
+        run: npm install -g snyk
+      
+      - name: Verify Snyk installation
+        run: snyk --version
+      
+      - name: Run Snyk Code scan
+        run: snyk code test
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        continue-on-error: true

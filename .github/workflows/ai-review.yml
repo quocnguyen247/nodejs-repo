@@ -24,15 +24,19 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16'
+          node-version: '20' # Updated to supported version
           cache: 'npm'
       
       - name: Install dependencies
         run: |
           npm cache clean --force
-          npm ci | npm install --force
+          npm ci || npm install --force
         env:
-           NODE_OPTIONS: --max_old_space_size=8192
+          NODE_OPTIONS: "--max-old-space-size=8192"
+      
+      - name: Show npm debug log
+        if: failure()
+        run: cat /home/runner/.npm/_logs/*.log
       
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
@@ -42,9 +46,7 @@ jobs:
       
       - name: Build project
         run: |
-          # Create node_modules directory if it doesn't exist
           mkdir -p node_modules
-          # Create a simple build artifact for demonstration
           echo "console.log('Build artifact created');" > dist-build.js
           npm run build --if-present || echo "No build script found, continuing..."
       
@@ -72,4 +74,3 @@ jobs:
           mode: files
           language: en
           custom_prompt: "Review this code for: - Security vulnerabilities - Performance issues - Code style violations - Logic errors"
-

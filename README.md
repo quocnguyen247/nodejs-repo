@@ -66,3 +66,13 @@ Always follow AWS security best practices:
 - Store credentials securely using AWS CLI or IAM roles
 - Encrypt sensitive data at rest and in transit
 - Regularly rotate credentials and review permissions
+
+## Security Scanning
+
+This project uses multiple security scanning tools:
+
+- **Snyk Code Analysis**: Detects security vulnerabilities in code
+- **CodeQL**: Advanced semantic code analysis
+- **Dependabot**: Monitors dependencies for vulnerabilities
+
+See [SECURITY.md](./SECURITY.md) for details on detected issues and remediation.
