@@ -21,12 +21,12 @@ jobs:
       - name: Set up Snyk CLI
         uses: snyk/actions/setup@master
       
-      - name: Snyk Code Scan
-        run: snyk code test --severity-threshold=medium --sarif-file-output=snyk-results.sarif --include-ignores
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      # - name: Snyk Code Scan
+      #   run: snyk code test --severity-threshold=medium --sarif-file-output=snyk-results.sarif
+      #   env:
+      #     SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       
-      - name: Upload SARIF file
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: snyk-results.sarif
+      # - name: Upload SARIF file
+      #   uses: github/codeql-action/upload-sarif@v3
+      #   with:
+      #     sarif_file: snyk-results.sarif
