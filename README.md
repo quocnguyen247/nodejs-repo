@@ -74,5 +74,20 @@ This project uses multiple security scanning tools:
 - **Snyk Code Analysis**: Detects security vulnerabilities in code
 - **CodeQL**: Advanced semantic code analysis
 - **Dependabot**: Monitors dependencies for vulnerabilities
+- **ESLint with security plugin**: Static code analysis for security issues
 
 See [SECURITY.md](./SECURITY.md) for details on detected issues and remediation.
+
+## Development
+
+### ESLint
+
+This project uses ESLint with security plugins to ensure code quality and security:
+
+```bash
+# Run ESLint
+npm run lint
+
+# Fix automatically fixable issues
+npm run lint:fix
+```

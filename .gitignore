@@ -1,34 +1,22 @@
 # Dependency directories
 node_modules/
-jspm_packages/
-
-# Build outputs
-dist/
-build/
-*.tgz
 
 # Logs
 logs
 *.log
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 
-# Coverage directory used by tools like istanbul
+# Coverage directory
 coverage/
 
-# Environment variables
+# dotenv environment variable files
 .env
 .env.local
-.env.development.local
-.env.test.local
-.env.production.local
 
 # IDE files
 .idea/
 .vscode/
 *.swp
-*.swo
 
 # OS files
 .DS_Store
