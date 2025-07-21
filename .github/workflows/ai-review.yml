@@ -1,35 +1,67 @@
-name: AI Code Review
+name: AI Code Review with CodeQL Analysis
 
-# permissions:
-#   contents: read
-#   pull-requests: write
+permissions:
+  contents: read
+  pull-requests: write
+  security-events: write
 
 on:
   pull_request:
     types: [opened, synchronize, reopened]
+  schedule:
+    - cron: '0 0 * * 0'  # Run once a week on Sunday
+
 jobs:
-  ai-review:
+  codeql-analysis:
+    name: CodeQL Security Analysis
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          cache: 'npm'
+      
       - name: Install dependencies
         run: npm install
-      - name: Install CodeQL
       
-      - uses: github/codeql-action/init@v2
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
         with:
           languages: javascript
-      - uses: github/codeql-action/analyze@v2
-
+          queries: security-and-quality
+      
+      - name: Build project
+        run: |
+          npm run build --if-present
+      
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
+        with:
+          category: "/language:javascript"
+  
+  ai-review:
+    name: AI Code Review
+    runs-on: ubuntu-latest
+    needs: codeql-analysis
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      
       - name: AI Code Review
         uses: cirolini/genai-code-review@v2
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           openai_api_key: ${{ secrets.OPENAI_API_KEY }}
-          openai_model: "gpt-3.5-turbo" # optional
-          openai_temperature: 0.5 # optional
-          openai_max_tokens: 2048 # optional
-          mode: files # files or patch
-          language: en # optional, default is 'en'
+          openai_model: "gpt-3.5-turbo"
+          openai_temperature: 0.5
+          openai_max_tokens: 2048
+          mode: files
+          language: en
           custom_prompt: "Review this code for: - Security vulnerabilities - Performance issues - Code style violations - Logic errors"
-       
+

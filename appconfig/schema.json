@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["features", "settings", "endpoints"],
+  "properties": {
+    "features": {
+      "type": "object",
+      "properties": {
+        "newFeature": { "type": "boolean" },
+        "betaFeature": { "type": "boolean" },
+        "darkMode": { "type": "boolean" }
+      },
+      "required": ["newFeature", "betaFeature"]
+    },
+    "settings": {
+      "type": "object",
+      "properties": {
+        "timeout": { 
+          "type": "number",
+          "minimum": 1000,
+          "maximum": 10000
+        },
+        "maxRetries": { 
+          "type": "number",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "cacheTime": { 
+          "type": "number",
+          "minimum": 60,
+          "maximum": 3600
+        },
+        "allowedIPs": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "required": ["timeout", "maxRetries"]
+    },
+    "endpoints": {
+      "type": "object",
+      "properties": {
+        "api": { "type": "string", "format": "uri" },
+        "auth": { "type": "string", "format": "uri" }
+      },
+      "required": ["api", "auth"]
+    }
+  }
+}
