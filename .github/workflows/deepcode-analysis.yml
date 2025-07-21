@@ -24,7 +24,10 @@ jobs:
           node-version: '16'
       
       - name: Install dependencies
-        run: npm install
+        run: |
+          npm cache clean --force
+          npm install --no-package-lock
+        continue-on-error: true
       
       - name: Run Snyk Code Analysis
         run: |

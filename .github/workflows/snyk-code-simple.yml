@@ -20,7 +20,9 @@ jobs:
           node-version: '16'
       
       - name: Install Snyk CLI
-        run: npm install -g snyk
+        run: |
+          npm cache clean --force
+          npm install -g snyk@latest
       
       - name: Run Snyk Code Test
         run: |
